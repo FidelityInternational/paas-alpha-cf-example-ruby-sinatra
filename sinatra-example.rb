@@ -102,6 +102,11 @@ Process memory: #{rss_bytes} kiB aka #{rss_bytes/1024} MiB
       m.index("A very long string to forces load all the string in memory to search for it :)")
     }
     puts "Done reading all memory blocks"
+  end
 
+  # Mark all the memory blocks allocated by /mem/alloc as ready to be freed by the GC
+  get '/mem/free' do
+    $leak_buffer = nil
+    GC.start
   end
 end
