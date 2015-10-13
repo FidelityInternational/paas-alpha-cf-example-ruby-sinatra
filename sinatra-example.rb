@@ -41,7 +41,7 @@ class SinatraExample < Sinatra::Base
     "Finished generating CPU load - #{processes} processes complete"
   end
 
-  get '/mem/:size_mb/?:leak?' do
+  get '/mem/alloc/:size_mb/?:leak?' do
     content_type 'application/text'
 
     size_mb = params[:size_mb].to_i
