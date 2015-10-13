@@ -89,6 +89,19 @@ Process memory after: #{rss_bytes_after} kiB aka #{rss_bytes_after/1024} MiB
     """Process memory: #{rss_bytes} kiB aka #{rss_bytes/1024} MiB
 Process memory: #{rss_bytes} kiB aka #{rss_bytes/1024} MiB
 """
+  end
+
+  # Read all the memory allocated by /mem/alloc endpoint, so the system
+  # will be forced to page it in from swap if needed.
+  get '/mem/touch' do
+    return unless $leak_buffer
+
+    $leak_buffer.each_with_index { |m, index|
+      puts "Reading memory blocks #{index+1} of #{$leak_buffer.length} to page it in."
+
+      m.index("A very long string to forces load all the string in memory to search for it :)")
+    }
+    puts "Done reading all memory blocks"
 
   end
 end
