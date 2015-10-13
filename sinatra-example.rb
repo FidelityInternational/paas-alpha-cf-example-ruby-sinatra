@@ -76,6 +76,19 @@ Free system memory after: #{free_mem_after} kiB aka #{free_mem_after/1024} MiB
 Process memory before: #{rss_bytes_before} kiB aka #{rss_bytes_before/1024} MiB
 Process memory after: #{rss_bytes_after} kiB aka #{rss_bytes_after/1024} MiB
 """
+  end
+
+  get '/mem/status' do
+    content_type 'application/text'
+
+    # Metrics after allocate
+    rss_bytes = OS.rss_bytes
+    free_mem = (Vmstat.memory.free * Vmstat.memory.pagesize) / 1024
+
+
+    """Process memory: #{rss_bytes} kiB aka #{rss_bytes/1024} MiB
+Process memory: #{rss_bytes} kiB aka #{rss_bytes/1024} MiB
+"""
 
   end
 end
