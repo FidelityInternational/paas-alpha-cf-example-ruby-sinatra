@@ -41,8 +41,13 @@ class SinatraExample < Sinatra::Base
     "Finished generating CPU load - #{processes} processes complete"
   end
 
-  get '/mem/alloc/:size_mb/?:leak?' do
+  get '/mem/alloc/:size_mb/?:leak?/?:once?' do
     content_type 'application/text'
+
+    if params[:once] and params[:once]=1 and $leak_buffer
+      puts "Already has memory allocated, skipping"
+      return "Already has memory allocated, skipping"
+    end
 
     size_mb = params[:size_mb].to_i
     total_bytes = size_mb*1024**2
