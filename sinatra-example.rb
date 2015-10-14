@@ -25,14 +25,17 @@ class SinatraExample < Sinatra::Base
     "slept for #{milliseconds} milliseconds"
   end
 
-  get '/cpuload' do
-    child_pid = Process.fork do
-      genload
+  get '/cpuload/:processes' do
+    processes = params[:processes].to_i
+    processes.times do |p|
+      child_pid = Process.fork do
+        genload
+      end
     end
 
-    Process.detach child_pid
+    Process.wait
 
-    "Generating CPU load in the background. Hit refresh to generate more load"
+    "Finished generating CPU load - #{processes} processes complete"
   end
 
 end
