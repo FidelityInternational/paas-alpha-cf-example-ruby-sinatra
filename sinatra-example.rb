@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'sinatra/base'
+require 'tilt/erb'
 
 def genload
   1000.times do |i|
