@@ -42,8 +42,6 @@ class SinatraExample < Sinatra::Base
   end
 
   get '/mem/alloc/:size_mb/?:leak?/?:once?' do
-    content_type 'application/text'
-
     if params[:once] and params[:once]=1 and $leak_buffer
       puts "Already has memory allocated, skipping"
       return "Already has memory allocated, skipping"
@@ -84,8 +82,6 @@ Process memory after: #{rss_bytes_after} kiB aka #{rss_bytes_after/1024} MiB
   end
 
   get '/mem/status' do
-    content_type 'application/text'
-
     # Metrics after allocate
     rss_bytes = OS.rss_bytes
     free_mem = (Vmstat.memory.free * Vmstat.memory.pagesize) / 1024
