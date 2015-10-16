@@ -2,6 +2,4 @@
 applications:
 - name: cf-example-ruby-sinatra
   memory: 512M
-  instances: 1
-  host: cf-example-ruby-sinatra-${random-word}
-
+  host: cf-example-ruby-sinatra
