@@ -13,6 +13,18 @@ def genload
   end
 end
 
+LOREM_IPSUM = """
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tristique semper purus, non efficitur lacus placerat non. In quis erat eget magna molestie finibus. Quisque non iaculis ligula. Aenean auctor porttitor lacus eu posuere. Duis eleifend feugiat erat vel feugiat. Aliquam volutpat ullamcorper ipsum, eu pulvinar est. Aenean tincidunt id magna eu pulvinar. Nunc scelerisque et felis quis hendrerit.
+
+Quisque rutrum porta est, id porta orci iaculis non. Ut vel enim nibh. Quisque sagittis venenatis diam et luctus. Ut gravida in nisl eu efficitur. Integer mollis velit nisl, et tristique turpis scelerisque ac. Maecenas aliquet mollis leo dictum dapibus. Duis sollicitudin mollis ante, vel sodales quam. Nulla vulputate tempor purus in dignissim. Nunc cursus, lacus a accumsan tristique, metus eros mattis lacus, et pellentesque urna lorem lobortis nisi. Proin auctor diam sed viverra mattis. Suspendisse eu lobortis neque. Suspendisse sapien lectus, pretium vel ex sit amet, finibus volutpat sapien. Donec felis lorem, elementum vel ultrices a, volutpat sed enim. Nulla suscipit ligula vel venenatis placerat. Integer sit amet nibh id metus varius auctor ac in enim. In hac habitasse platea dictumst.
+
+Pellentesque tincidunt porta convallis. Nunc sed mattis ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In pretium auctor lobortis. Praesent vestibulum posuere hendrerit. Proin semper est ac nisi maximus aliquam. Integer commodo sollicitudin felis. Quisque aliquam, mi a feugiat facilisis, odio metus aliquet erat, id tincidunt risus nisl et libero. Praesent molestie ornare fermentum. Nunc congue orci justo, sit amet tincidunt leo finibus et. Duis nibh ante, commodo ut mattis non, faucibus non dui. Nam at arcu in felis ullamcorper mattis sit amet a nisl. Vestibulum mollis interdum cursus. Ut nunc libero, maximus in semper eu, facilisis a velit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce convallis eget felis vitae eleifend.
+
+Sed ut metus id nunc tincidunt condimentum. Nunc lectus lacus, posuere quis nulla vel, viverra euismod nibh. Morbi augue dui, feugiat eu tortor eu, pretium pellentesque purus. Nullam consectetur consequat lorem sit amet dignissim. Vestibulum porttitor orci in ligula tristique sodales. Curabitur at est purus. Sed scelerisque enim purus, non semper lorem efficitur sed. Nullam eu erat non nisl molestie elementum quis sit amet risus. Vivamus pretium augue dolor, at gravida magna hendrerit eget. Donec ultrices iaculis ex at consectetur. Quisque id dolor eu mi lacinia suscipit. Cras vehicula neque lorem, quis ultrices libero ultricies vel. Aenean tempor neque nec leo posuere, in scelerisque quam lacinia. Mauris mauris lacus, rutrum et pharetra eget, cursus et diam.
+
+Aenean fermentum nunc sit amet condimentum accumsan. Proin metus nisi, porttitor ultrices pharetra ac, interdum et velit. Duis at lorem neque. Pellentesque at viverra justo. Vestibulum vulputate elementum felis nec pharetra. Suspendisse potenti. Duis vestibulum arcu quam, dictum tristique nunc consequat et. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla posuere quam eu fermentum placerat. In ullamcorper mauris nec sem dapibus sodales. Nunc vehicula mi leo, id luctus mauris sodales et. Donec quis consectetur est. Vestibulum tempus egestas ante cursus finibus. Nam placerat accumsan pharetra.
+"""
+
 class SinatraExample < Sinatra::Base
   get '/' do
     erb :home
@@ -109,5 +121,14 @@ Process memory: #{rss_bytes} kiB aka #{rss_bytes/1024} MiB
   get '/mem/free' do
     $leak_buffer = nil
     GC.start
+  end
+
+  get '/bigresponse/:size' do
+    size = params[:size].to_i
+
+    stream do |out|
+      (size / LOREM_IPSUM.length).times { out << LOREM_IPSUM }
+      out << LOREM_IPSUM[0..size%LOREM_IPSUM.length-1]
+    end
   end
 end
