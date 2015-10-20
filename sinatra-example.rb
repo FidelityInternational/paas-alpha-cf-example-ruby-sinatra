@@ -5,9 +5,9 @@ require 'tilt/erb'
 require 'vmstat'
 require 'os'
 
-def genload
-  1000.times do |i|
-    100000.downto(1) do |j|
+def genload(repetitions)
+  repetitions.times do |i|
+    10000.downto(1) do |j|
       Math.sqrt(j) * i / 0.2
     end
   end
@@ -40,11 +40,18 @@ class SinatraExample < Sinatra::Base
     "slept for #{milliseconds} milliseconds"
   end
 
+  get '/simplecpuload/?:repetitions?' do
+    repetitions = (params[:repetitions] || 10).to_i
+    genload repetitions
+
+    "Done computing. The answer is: 42"
+  end
+
   get '/cpuload/:processes' do
     processes = params[:processes].to_i
     processes.times do |p|
       child_pid = Process.fork do
-        genload
+        genload 1000
       end
     end
 
